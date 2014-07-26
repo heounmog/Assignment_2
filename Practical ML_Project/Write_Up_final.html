@@ -221,44 +221,94 @@ testing &lt;- data[-inTrain, ]
 <pre><code>## Warning: package &#39;e1071&#39; was built under R version 3.1.1
 </code></pre>
 
-<pre><code class="r">vali_rpart &lt;- confusionMatrix(testing$classe, predict(model_rpart, testing))
-vali_rpart$overall[1]
+<pre><code class="r">confusionMatrix(testing$classe, predict(model_rpart, testing))
 </code></pre>
 
-<pre><code>## Accuracy 
-##   0.5018
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    A    B    C    D    E
+##          A 1286   49  161  172    6
+##          B  254  395  269  221    0
+##          C  312   44  602   68    0
+##          D  254  179  177  354    0
+##          E  113  215  229  209  316
+## 
+## Overall Statistics
+##                                         
+##                Accuracy : 0.502         
+##                  95% CI : (0.489, 0.515)
+##     No Information Rate : 0.377         
+##     P-Value [Acc &gt; NIR] : &lt;2e-16        
+##                                         
+##                   Kappa : 0.363         
+##  Mcnemar&#39;s Test P-Value : &lt;2e-16        
+## 
+## Statistics by Class:
+## 
+##                      Class: A Class: B Class: C Class: D Class: E
+## Sensitivity             0.580   0.4478    0.419   0.3457   0.9814
+## Specificity             0.894   0.8513    0.905   0.8745   0.8623
+## Pos Pred Value          0.768   0.3468    0.587   0.3672   0.2921
+## Neg Pred Value          0.778   0.8974    0.828   0.8638   0.9988
+## Prevalence              0.377   0.1499    0.244   0.1740   0.0547
+## Detection Rate          0.219   0.0671    0.102   0.0602   0.0537
+## Detection Prevalence    0.284   0.1935    0.174   0.1638   0.1839
+## Balanced Accuracy       0.737   0.6496    0.662   0.6101   0.9218
 </code></pre>
 
-<p>The random forest model shows the accuracy of 98.9%, which means that it is fairly good model.</p>
+<p>Whereas, the random forest model shows the accuracy of 98.9%, which means that it is fairly good model.</p>
 
 <p>According to the cross validation, the out of sample error is expected to be less than 1.44% with 95% confidence, because the lower bound of 95% CI for accuracy is 0.9856. So the maximum out of sample error would be 1-0.9856 = 1.44%</p>
 
-<pre><code class="r">## model_rf &lt;- train(classe ~., method=&quot;rf&quot;, data=training)
-## vali_rf &lt;- confusionMatrix(testing$classe, predict(model_rf, testing))
-## vali_rf$overall[1]
+<pre><code class="r">model_rf &lt;- train(classe ~., method=&quot;rf&quot;, data=training)
+confusionMatrix(testing$classe, predict(model_rf, testing))
 </code></pre>
 
-<p>Due to the long execution time(more than half an hour), I attach the result directly.</p>
-
-<p>Overall Statistics</p>
-
-<pre><code>           Accuracy : 0.9886          
-             95% CI : (0.9856, 0.9912)
-No Information Rate : 0.2851          
-P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-
-              Kappa : 0.9856          
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    A    B    C    D    E
+##          A 1669    2    0    3    0
+##          B   19 1105   13    2    0
+##          C    0    9 1017    0    0
+##          D    0    0   35  929    0
+##          E    0    0    3    0 1079
+## 
+## Overall Statistics
+##                                         
+##                Accuracy : 0.985         
+##                  95% CI : (0.982, 0.988)
+##     No Information Rate : 0.287         
+##     P-Value [Acc &gt; NIR] : &lt;2e-16        
+##                                         
+##                   Kappa : 0.982         
+##  Mcnemar&#39;s Test P-Value : NA            
+## 
+## Statistics by Class:
+## 
+##                      Class: A Class: B Class: C Class: D Class: E
+## Sensitivity             0.989    0.990    0.952    0.995    1.000
+## Specificity             0.999    0.993    0.998    0.993    0.999
+## Pos Pred Value          0.997    0.970    0.991    0.964    0.997
+## Neg Pred Value          0.995    0.998    0.990    0.999    1.000
+## Prevalence              0.287    0.190    0.181    0.159    0.183
+## Detection Rate          0.284    0.188    0.173    0.158    0.183
+## Detection Prevalence    0.284    0.194    0.174    0.164    0.184
+## Balanced Accuracy       0.994    0.992    0.975    0.994    1.000
 </code></pre>
+
+<p>So, I decide to select random forest model finally and use it to predict the class of 20 cases.</p>
 
 <p>Next, I load the testing set file of 20 cases, and predict the classe of them with random forest model above.</p>
 
 <pre><code class="r">test_case &lt;- read.csv(&quot;pml-testing.csv&quot;)
-##predict(model_rf, test_case)
+predict(model_rf, test_case)
 </code></pre>
 
-<p>The predicted results are:</p>
-
-<p>B &hellip;&hellip;&hellip;&hellip;(omitted)&hellip;&hellip;&hellip;.. B</p>
+<pre><code>##  [1] B A B A A E D B A A B C B A E E A B B B
+## Levels: A B C D E
+</code></pre>
 
 </body>
 
